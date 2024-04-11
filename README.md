@@ -24,4 +24,9 @@ in the terminal.
 python leaderboards.py
 ```
 5. Once this script is running, you will be prompted to input the metric you wish the leaderboard to be ranked using. This can be any of 'Top Speed', 'Total Distance', 'Distance in Zone 5' or 'Time With Ball'.
-6. The output will be a leaderboard of players ranked based on your chosen metric. 
+6. The output will be a leaderboard of players ranked based on your chosen metric.
+
+## Time spent on each section: 
+* Discovery - approximately 1hr.
+* Execution - approximately 5hrs.
+* Presentation - approximately 2hrs. 
