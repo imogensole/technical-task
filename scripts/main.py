@@ -57,7 +57,7 @@ speeds = all_players_data[['participation_id', 'Speed (m/s)']]
 top_speeds = speeds.groupby('participation_id').max()
 top_speeds = top_speeds.rename(columns={'Speed (m/s)': 'Top Speed'})
 
-# apply total distance function
+# Apply total distance function
 total_distances = all_players_data.groupby('participation_id').apply(total_distance)
 total_distances.name = 'Total Distance'
 
@@ -65,7 +65,7 @@ total_distances.name = 'Total Distance'
 total_distances_z5 = all_players_data.groupby('participation_id').apply(total_dist_zone5)
 total_distances_z5.name = 'Total Distance Zone 5'
 
-# Apply distance is z5 function
+# Apply time with ball function
 time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball)
 time_with_ball.name = 'Time With Ball'
 
