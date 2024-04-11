@@ -19,6 +19,7 @@ The user can then choose to rank the players based on any of these four metrics.
 python ./scripts/main.py
 ```
 in the terminal.
+
 4. Run the leaderboards script using 
 ```
 python ./scripts/leaderboards.py
