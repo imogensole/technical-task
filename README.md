@@ -13,15 +13,15 @@ The user can then choose to rank the players based on any of these four metrics.
 ## How to use the project: 
 
 1. Clone the git repo.
-2. Unzip the data file 'match_data.csv.zip'. 
+2. Unzip the data file 'match_data.csv.zip' which is stored in the data file. 
 3. Run the main python script by running
 ```
-python main.py
+python ./scripts/main.py
 ```
 in the terminal.
 4. Run the leaderboards script using 
 ```
-python leaderboards.py
+python ./scripts/leaderboards.py
 ```
 5. Once this script is running, you will be prompted to input the metric you wish the leaderboard to be ranked using. This can be any of 'Top Speed', 'Total Distance', 'Distance in Zone 5' or 'Time With Ball'.
 6. The output will be a leaderboard of players ranked based on your chosen metric.

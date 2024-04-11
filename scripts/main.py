@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Read in the data 
-data = pd.read_csv("match_data.csv")
+data = pd.read_csv("data/match_data.csv")
 
 # Filter the data 
 data_filtered = data[(data['Pitch_x'] >= -52.5) & (data['Pitch_x'] <= 52.5) & (data['Pitch_y'] >= -34) & (data['Pitch_y'] <= 34)]
@@ -63,7 +63,7 @@ total_distances.name = 'Total Distance'
 
 # Apply distance is z5 function
 total_distances_z5 = all_players_data.groupby('participation_id').apply(total_dist_zone5)
-total_distances_z5.name = 'Total Distance Zone 5'
+total_distances_z5.name = 'Distance in Zone 5'
 
 # Apply time with ball function
 time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball)
@@ -73,5 +73,5 @@ time_with_ball.name = 'Time With Ball'
 combined_data = top_speeds.join(total_distances).join(total_distances_z5).join(time_with_ball)
 
 # Write to a csv
-combined_data.to_csv('player_metrics.csv')
+combined_data.to_csv('data/player_metrics.csv')
 

@@ -1,7 +1,7 @@
 import pandas as pd 
 
 # Read in the data 
-data = pd.read_csv("player_metrics.csv")
+data = pd.read_csv("data/player_metrics.csv")
 
 while True:
     metric = input("How would you like the players ranked? Choose from 'Top Speed', 'Total Distance', 'Distance in Zone 5' or 'Time With Ball' ")
