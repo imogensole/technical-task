@@ -13,7 +13,7 @@ The user can then choose to rank the players based on any of these four metrics.
 ## How to use the project: 
 
 1. Clone the git repo.
-2. Ensure the data file is saved in the scripts folder as 'match_data.csv' (we were unable to upload this to the repo due to the filesize).
+2. Unzip the data file 'match_data.csv.zip'. 
 3. Run the main python script by running
 ```
 python main.py
