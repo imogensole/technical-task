@@ -10,8 +10,8 @@ data_filtered = data[(data['Pitch_x'] >= -52.5) & (data['Pitch_x'] <= 52.5)
 data_sorted = data_filtered.sort_values(by='Time (s)')
 
 # Separate data for players and ball
-all_players_data = data_sorted[data_filtered['participation_id'] != 'ball']
-ball_data = data_filtered[data_filtered['participation_id'] == 'ball']
+all_players_data = data_sorted[data_sorted['participation_id'] != 'ball']
+ball_data = data_sorted[data_sorted['participation_id'] == 'ball']
 
 def total_distance(player_data):
     '''
@@ -60,7 +60,6 @@ def calc_time_with_ball(player_data, ball_data):
     Takes the GPS data for a single player and computes the total time the player is less than 3m from the 
     ball. 
     '''
-
     # Get times and positions of player and ball 
     player_positions = player_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
     ball_positions = ball_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
