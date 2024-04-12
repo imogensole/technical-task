@@ -46,7 +46,7 @@ def total_dist_zone5(player_data):
     return total_z5
 
 # Define function to calculate time player has possession of ball
-def calc_time_with_ball(player_data):
+def calc_time_with_ball(player_data, ball_data):
 
     # Get times and positions of player and ball 
     player_positions = player_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
@@ -82,7 +82,7 @@ total_distances_z5 = all_players_data.groupby('participation_id').apply(total_di
 total_distances_z5.name = 'Distance in Zone 5'
 
 # Apply time with ball function
-time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball)
+time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball, ball_data=ball_data)
 time_with_ball.name = 'Time With Ball'
 
 # Combine metrics into a single DataFrame
