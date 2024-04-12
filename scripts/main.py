@@ -25,6 +25,7 @@ def total_distance(player_data):
 
     return total_dist
 
+
 # Define function to calculate the total distance in zone 5 
 def total_dist_zone5(player_data):
 
