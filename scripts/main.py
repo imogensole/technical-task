@@ -80,6 +80,30 @@ def calc_time_with_ball(player_data, ball_data):
 
     return time_with_ball
 
+def count_sprints(player_data):
+    # Create a mask to get distances while in zone 5 
+    mask = (player_data['Speed (m/s)'] <= 7.03) &  (player_data['Speed (m/s)'] >= 5.5)
+
+    # Find continuous sections where the mask is True 
+    mask_diff = np.concatenate(([0], np.diff(mask.astype(int)), [0]))
+
+    # Find indices of starts and ends of sprints 
+    sprint_starts_idx = np.where(mask_diff == 1)
+    sprint_ends_idx = np.where(mask_diff == -1)
+
+    # Get start and end times of sprints 
+    start_times = np.array(player_data['Time (s)'].iloc[sprint_starts_idx])
+    end_times = np.array(player_data['Time (s)'].iloc[sprint_ends_idx])
+
+    # Calculate length of each sprint 
+    sprint_lengths = end_times - start_times
+
+    # Count total number of sprints longer than 2s 
+    total_sprints = sum(sprint_lengths > 2)
+    
+    return total_sprints
+
+
 # Calculate the top speeds 
 speeds = all_players_data[['participation_id', 'Speed (m/s)']]
 top_speeds = speeds.groupby('participation_id').max()
@@ -97,8 +121,12 @@ total_distances_z5.name = 'Distance in Zone 5'
 time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball, ball_data=ball_data)
 time_with_ball.name = 'Time With Ball'
 
+# Apply time with ball function
+number_sprints = all_players_data.groupby('participation_id').apply(count_sprints)
+number_sprints.name = 'Number of Sprint Events'
+
 # Combine metrics into a single DataFrame
-combined_data = top_speeds.join(total_distances).join(total_distances_z5).join(time_with_ball)
+combined_data = top_speeds.join(total_distances).join(total_distances_z5).join(time_with_ball).join(number_sprints)
 
 # Write to a csv
 combined_data.to_csv('data/player_metrics.csv')

@@ -6,7 +6,8 @@ The code computes four key metrics based on the athlete's data:
 * Total distance
 * Distance at speed zone 5
 * Top speed
-* and time with the ball.
+* Number of sprint events - classified as the number of times the athlete is travelling in speed zone 5 for more than 2 seconds
+* and time with the ball - classified as the time the athlete is less than 2m from the ball.
 
 The user can then choose to rank the players based on any of these four metrics. 
 
