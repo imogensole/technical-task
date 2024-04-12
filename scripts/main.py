@@ -13,6 +13,18 @@ data_sorted = data_filtered.sort_values(by='Time (s)')
 all_players_data = data_sorted[data_sorted['participation_id'] != 'ball']
 ball_data = data_sorted[data_sorted['participation_id'] == 'ball']
 
+# function to smooth noise in speed measurements 
+def smooth_speed(player_data):
+    player_data['Speed (m/s)'] = player_data['Speed (m/s)'].rolling(window=3).mean()
+    return player_data
+
+# Applying the function grouped by 'participation_id'
+smooth_speeds = all_players_data.groupby('participation_id').apply(smooth_speed)
+
+# Convert the index back to regular columns
+smooth_speeds = smooth_speeds.reset_index(level=0, drop=True)
+
+
 def total_distance(player_data):
     '''
     Takes the GPS data for a single player and computes the total distance 
