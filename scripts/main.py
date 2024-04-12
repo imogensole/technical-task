@@ -4,35 +4,51 @@ import numpy as np
 # Read in the data 
 data = pd.read_csv("data/match_data.csv")
 
-# Filter the data 
+# Filter and sort the data 
 data_filtered = data[(data['Pitch_x'] >= -52.5) & (data['Pitch_x'] <= 52.5) & (data['Pitch_y'] >= -34) & (data['Pitch_y'] <= 34)]
 all_players_data = data_filtered[data_filtered['participation_id'] != 'ball']
+all_players_data = all_players_data.sort_values(by='Time (s)')
 ball_data = data_filtered[data_filtered['participation_id'] == 'ball']
 
 # Define function to calculate the total distance 
 def total_distance(player_data):
+
+    # Get differences between subsequent positions 
     x_diff = player_data['Pitch_x'].diff()
     y_diff = player_data['Pitch_y'].diff()
+
+    # Calculate distance between subsequent positions
     distances = np.sqrt(x_diff**2 + y_diff**2)
 
+    # Sum distances 
     total_dist = np.sum(distances)
+
     return total_dist
+
 
 # Define function to calculate the total distance in zone 5 
 def total_dist_zone5(player_data):
+
+    # Get differences between subsequent positions 
     x_diff = player_data['Pitch_x'].diff()
     y_diff = player_data['Pitch_y'].diff()
-    distances = np.sqrt(x_diff**2 + y_diff**2)
-    mask = (player_data['Speed (m/s)'] <= 7.03) &  (player_data['Speed (m/s)'] >= 5.5)
 
+    # Calculate distances between subsequent positions 
+    distances = np.sqrt(x_diff**2 + y_diff**2)
+
+    # Create mask to get distances while in zone 5 
+    mask = (player_data['Speed (m/s)'] <= 7.03) &  (player_data['Speed (m/s)'] >= 5.5)
     distances_selected = distances[mask]
 
+    # Sum distances in zone 5 
     total_z5 = np.sum(distances_selected)
 
     return total_z5
 
 # Define function to calculate time player has possession of ball
 def calc_time_with_ball(player_data):
+
+    # Get times and positions of player and ball 
     player_positions = player_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
     ball_positions = ball_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
 
@@ -46,7 +62,7 @@ def calc_time_with_ball(player_data):
     # Calculate distances between player and ball at common time points
     distances = np.linalg.norm(ball_positions_common - player_positions_common, axis=1)
 
-    # Calculate time with ball less than or equal to 3m
+    # Calculate time with ball less than or equal to 3m away
     time_diff = np.diff(common_times)
     time_with_ball = np.sum(np.where((distances[:-1] <= 3) & (time_diff > 0), time_diff, 0))
 
