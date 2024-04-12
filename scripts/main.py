@@ -5,19 +5,25 @@ import numpy as np
 data = pd.read_csv("data/match_data.csv")
 
 # Filter and sort the data 
-data_filtered = data[(data['Pitch_x'] >= -52.5) & (data['Pitch_x'] <= 52.5) & (data['Pitch_y'] >= -34) & (data['Pitch_y'] <= 34)]
-all_players_data = data_filtered[data_filtered['participation_id'] != 'ball']
-all_players_data = all_players_data.sort_values(by='Time (s)')
+data_filtered = data[(data['Pitch_x'] >= -52.5) & (data['Pitch_x'] <= 52.5) 
+                     & (data['Pitch_y'] >= -34) & (data['Pitch_y'] <= 34)]
+data_sorted = data_filtered.sort_values(by='Time (s)')
+
+# Separate data for players and ball
+all_players_data = data_sorted[data_filtered['participation_id'] != 'ball']
 ball_data = data_filtered[data_filtered['participation_id'] == 'ball']
 
-# Define function to calculate the total distance 
 def total_distance(player_data):
+    '''
+    Takes the GPS data for a single player and computes the total distance 
+    travelled during play. 
+    '''
 
     # Get differences between subsequent positions 
     x_diff = player_data['Pitch_x'].diff()
     y_diff = player_data['Pitch_y'].diff()
 
-    # Calculate distance between subsequent positions
+    # Calculate the distance between subsequent positions
     distances = np.sqrt(x_diff**2 + y_diff**2)
 
     # Sum distances 
@@ -26,8 +32,11 @@ def total_distance(player_data):
     return total_dist
 
 
-# Define function to calculate the total distance in zone 5 
 def total_dist_zone5(player_data):
+    '''
+    Takes the GPS data for a single player and computes the total distance travelled in speed 
+    zone 5. 
+    '''
 
     # Get differences between subsequent positions 
     x_diff = player_data['Pitch_x'].diff()
@@ -36,7 +45,7 @@ def total_dist_zone5(player_data):
     # Calculate distances between subsequent positions 
     distances = np.sqrt(x_diff**2 + y_diff**2)
 
-    # Create mask to get distances while in zone 5 
+    # Create a mask to get distances while in zone 5 
     mask = (player_data['Speed (m/s)'] <= 7.03) &  (player_data['Speed (m/s)'] >= 5.5)
     distances_selected = distances[mask]
 
@@ -45,14 +54,18 @@ def total_dist_zone5(player_data):
 
     return total_z5
 
-# Define function to calculate time player has possession of ball
-def calc_time_with_ball(player_data):
 
+def calc_time_with_ball(player_data, ball_data):
+    '''
+    Takes the GPS data for a single player and computes the total time the player is less than 3m from the 
+    ball. 
+    '''
+    
     # Get times and positions of player and ball 
     player_positions = player_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
     ball_positions = ball_data[['Time (s)', 'Pitch_x', 'Pitch_y']]
 
-    # Find the common times between player and ball
+    # Find the common times between the player and the ball
     common_times = np.intersect1d(player_positions['Time (s)'], ball_positions['Time (s)'])
 
     # Filter player and ball positions to only include common times
@@ -82,7 +95,7 @@ total_distances_z5 = all_players_data.groupby('participation_id').apply(total_di
 total_distances_z5.name = 'Distance in Zone 5'
 
 # Apply time with ball function
-time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball)
+time_with_ball = all_players_data.groupby('participation_id').apply(calc_time_with_ball, ball_data=ball_data)
 time_with_ball.name = 'Time With Ball'
 
 # Combine metrics into a single DataFrame
