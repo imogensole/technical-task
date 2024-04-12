@@ -20,10 +20,8 @@ def smooth_speed(player_data):
 
 # Applying the function grouped by 'participation_id'
 smooth_speeds = all_players_data.groupby('participation_id').apply(smooth_speed)
-
-# Convert the index back to regular columns
-smooth_speeds = smooth_speeds.reset_index(level=0, drop=True)
-
+all_players_data = smooth_speeds.reset_index(level=0, drop=True)
+ball_data = smooth_speed(ball_data)
 
 def total_distance(player_data):
     '''
