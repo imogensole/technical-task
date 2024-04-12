@@ -15,7 +15,7 @@ ball_data = data_sorted[data_sorted['participation_id'] == 'ball']
 
 # function to smooth noise in speed measurements 
 def smooth_speed(player_data):
-    player_data['Speed (m/s)'] = player_data['Speed (m/s)'].rolling(window=3).mean()
+    player_data.loc[:, 'Speed (m/s)'] = player_data['Speed (m/s)'].rolling(window=3, min_periods=1).mean()
     return player_data
 
 # Applying the function grouped by 'participation_id'
