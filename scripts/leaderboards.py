@@ -1,7 +1,7 @@
 import pandas as pd 
 
 # Read in the data 
-data = pd.read_csv("data/player_metrics.csv")
+data = pd.read_csv("output/player_metrics.csv")
 
 # Get the list of calculated metrics 
 metrics = data.drop(columns=['participation_id']).columns

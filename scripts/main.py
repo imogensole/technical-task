@@ -76,6 +76,7 @@ def calc_time_with_ball(player_data, ball_data):
 
     # Find the common times between the player and the ball
     common_times = np.intersect1d(player_positions['Time (s)'], ball_positions['Time (s)'])
+    time_diff = np.diff(common_times)
 
     # Filter player and ball positions to only include common times
     player_positions_common = player_positions[player_positions['Time (s)'].isin(common_times)][['Pitch_x', 'Pitch_y']].values
@@ -85,12 +86,14 @@ def calc_time_with_ball(player_data, ball_data):
     distances = np.linalg.norm(ball_positions_common - player_positions_common, axis=1)
 
     # Calculate time with ball less than or equal to 3m away
-    time_diff = np.diff(common_times)
     time_with_ball = np.sum(np.where((distances[:-1] <= 3) & (time_diff > 0), time_diff, 0))
 
     return time_with_ball
 
 def count_sprints(player_data):
+    '''
+    Takes GPS data for a single player and counts the number of independent sprints.
+    '''
     # Create a mask to get distances while in zone 5 
     mask = (player_data['Speed (m/s)'] <= 7.03) &  (player_data['Speed (m/s)'] >= 5.5)
 
@@ -109,7 +112,8 @@ def count_sprints(player_data):
     sprint_lengths = end_times - start_times
 
     # Count total number of sprints longer than 2s 
-    total_sprints = sum(sprint_lengths > 2)
+    long_sprints = (sprint_lengths > 2).astype(int)
+    total_sprints = sum(long_sprints)
     
     return total_sprints
 
@@ -139,5 +143,5 @@ number_sprints.name = 'Number of Sprint Events'
 combined_data = top_speeds.join(total_distances).join(total_distances_z5).join(time_with_ball).join(number_sprints)
 
 # Write to a csv
-combined_data.to_csv('data/player_metrics.csv')
+combined_data.to_csv('output/player_metrics.csv')
 
